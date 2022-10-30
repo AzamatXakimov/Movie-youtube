@@ -1,0 +1,32 @@
+.rating-icon::before{
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    margin-right: 10px; 
+    background-image: url("../images/star.svg");
+    background-position: center;
+    background-size: cover;
+    content: "";
+}
+
+.year-icon::before{
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    margin-right: 10px; 
+    background-image: url("../images/calendar.svg");
+    background-position: center;
+    background-size: cover;
+    content: "";
+}
+
+.time-icon::before{
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    margin-right: 10px; 
+    background-image: url("../images/clock.svg");
+    background-position: center;
+    background-size: cover;
+    content: "";
+}
