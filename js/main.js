@@ -2,6 +2,8 @@
 const elMovieForm = document.querySelector(".js-hero-form");
 const elMovieSearch = elMovieForm.querySelector(".js-hero-input");
 const elMovieSearchCategorie = elMovieForm.querySelector(".js-hero-select"); 
+const elMovieMinYear = elMovieForm.querySelector(".js-hero-min-year")
+const elMovieMaxYear = elMovieForm.querySelector(".js-hero-max-year")
 // Movies List 
 const elMovieList = document.querySelector(".js-mov-list");
 
@@ -99,6 +101,8 @@ elMovieForm.addEventListener("submit", function(evt){
 
     const elInputValue = elMovieSearch.value.trim();
     const elGanresValue = elMovieSearchCategorie.value;
+    const elMinYearValue = Number(elMovieMinYear.value);
+    const elMaxYearValue = Number(elMovieMaxYear.value);
 
     
     if(elInputValue == ""){
@@ -108,7 +112,7 @@ elMovieForm.addEventListener("submit", function(evt){
         const regexText = new RegExp(elInputValue, "gi");
         const regexGanres = new RegExp(elGanresValue, "gi");
     
-        const elSearch = movies.filter(item => String(item.Title).match(regexText) && (item.Categories.match(regexGanres) || elGanresValue === "All"));
+        const elSearch = movies.filter(item => String(item.Title).match(regexText) && (item.Categories.match(regexGanres) || elGanresValue === "All") && ((elMinYearValue <= item.movie_year && elMaxYearValue >= item.movie_year) || (elMinYearValue == "" && elMaxYearValue >= item.movie_year) || (elMinYearValue <= item.movie_year && elMaxYearValue == "")));
     
         if(elSearch.length > 0){
             crateList(elSearch);
