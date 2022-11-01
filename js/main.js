@@ -121,10 +121,10 @@ function sortMovie(Arr, sortValue){
     }
     else if(sortValue == "Z-A"){
         Arr.sort((a, b)=>{
-            if(a.Title > b.Title){
+            if(String(a.Title) > String(b.Title)){
                 return -1
             }
-            else if(a.Title < b.Title){
+            else if(String(a.Title) < String(b.Title)){
                 return 1
             }
             else{
