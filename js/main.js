@@ -2,8 +2,10 @@
 const elMovieForm = document.querySelector(".js-hero-form");
 const elMovieSearch = elMovieForm.querySelector(".js-hero-input");
 const elMovieSearchCategorie = elMovieForm.querySelector(".js-hero-select"); 
-const elMovieMinYear = elMovieForm.querySelector(".js-hero-min-year")
-const elMovieMaxYear = elMovieForm.querySelector(".js-hero-max-year")
+const elMovieMinYear = elMovieForm.querySelector(".js-hero-min-year");
+const elMovieMaxYear = elMovieForm.querySelector(".js-hero-max-year");
+
+const elMovieSort = elMovieForm.querySelector(".js-hero-sort");
 // Movies List 
 const elMovieList = document.querySelector(".js-mov-list");
 
@@ -96,6 +98,50 @@ elModal.addEventListener("hide.bs.modal", function(){
     modalIframe.src = "";
 });
 
+function sortMovie(Arr, sortValue){
+    if(sortValue == "2000-2018"){
+        Arr.sort((a, b)=> a.movie_year - b.movie_year)
+    }
+    else if(sortValue == "2018-2000"){
+        Arr.sort((a, b)=> b.movie_year - a.movie_year)
+    }
+
+    if(sortValue == "A-Z"){
+        Arr.sort((a, b)=> {
+            if(a.Title > b.Title){
+                return 1
+            }
+            else if(a.Title < b.Title){
+                return -1
+            }
+            else{
+                return 0
+            }
+        })
+    }
+    else if(sortValue == "Z-A"){
+        Arr.sort((a, b)=>{
+            if(a.Title > b.Title){
+                return -1
+            }
+            else if(a.Title < b.Title){
+                return 1
+            }
+            else{
+                return 0
+            }
+        })
+    }
+
+
+    if(sortValue == "1-10"){
+        Arr.sort((a, b)=> a.imdb_rating - b.imdb_rating)
+    }
+    else if(sortValue == "10-1"){
+        Arr.sort((a, b)=> b.imdb_rating - a.imdb_rating)
+    }
+}
+
 elMovieForm.addEventListener("submit", function(evt){
     evt.preventDefault();
 
@@ -104,13 +150,17 @@ elMovieForm.addEventListener("submit", function(evt){
     const elMinYearValue = Number(elMovieMinYear.value);
     const elMaxYearValue = Number(elMovieMaxYear.value);
 
-    
+    const elMovieSortValue = elMovieSort.value;
+
+    sortMovie(movies, elMovieSortValue)
+
+    const regexText = new RegExp(elInputValue, "gi");
+    const regexGanres = new RegExp(elGanresValue, "gi");
     if(elInputValue == ""){
-        crateList(movies.slice(0, 12))
+        const elSearch = movies.filter(item => (item.Categories.match(regexGanres) || elGanresValue === "All") && ((elMinYearValue <= item.movie_year && elMaxYearValue >= item.movie_year) || (elMinYearValue == "" && elMaxYearValue >= item.movie_year) || (elMinYearValue <= item.movie_year && elMaxYearValue == "")));
+        crateList(elSearch.slice(0, 12))
     }
     else{
-        const regexText = new RegExp(elInputValue, "gi");
-        const regexGanres = new RegExp(elGanresValue, "gi");
     
         const elSearch = movies.filter(item => String(item.Title).match(regexText) && (item.Categories.match(regexGanres) || elGanresValue === "All") && ((elMinYearValue <= item.movie_year && elMaxYearValue >= item.movie_year) || (elMinYearValue == "" && elMaxYearValue >= item.movie_year) || (elMinYearValue <= item.movie_year && elMaxYearValue == "")));
     

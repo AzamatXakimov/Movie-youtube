@@ -22,15 +22,35 @@
         <section class="hero mt-5">
             <div class="container">
                 <form class="js-hero-form" action="#" method="get">
-                    <div class="input-group mb-3">
-                        <input class="form-control js-hero-input me-4 rounded-end" type="search" aria-label="Search" placeholder="Search . . ." >
-                        <select class="form-select js-hero-select me-5 rounded-2" aria-label="Default select example">
-                            <option class="js-hero-option" value="All">All</option>
-                        </select>
-                        <input class="form-control js-hero-min-year  me-4 rounded-2" type="number" aria-label="Minimum search year" min="2000" max="2018" placeholder="Min year">
-                        <input class="form-control js-hero-max-year  me-4 rounded-2" type="number" aria-label="Maximum search year" min="2000" max="2018" placeholder="Max year">
-                        <button class="btn btn-outline-success rounded-start" type="submit">Search</button>
+                    <div class="input-group mb-3 row g-4">
+                        <div class="col-4">
+                            <input class="form-control js-hero-input rounded-end" type="search" aria-label="Search" placeholder="Search . . ." >
+                        </div>
+                        <div class="col-2">
+                            <select class="form-select js-hero-select rounded-2" aria-label="Default select example">
+                                <option class="js-hero-option" value="All">All</option>
+                            </select>
+                        </div>
+                        <div class="col-2">
+                            <input class="form-control col-3 js-hero-min-year  rounded-2" type="number" aria-label="Minimum search year" min="2000" max="2018" placeholder="Min year">
+                        </div>
+                        <div class="col-2">
+                            <input class="form-control js-hero-max-year  rounded-2" type="number" aria-label="Maximum search year" min="2000" max="2018" placeholder="Max year">
+                        </div>
+                        <div class="col-2">
+                            <select class="form-select js-hero-sort rounded-2" aria-label="Default select example">
+                                <option class="js-hero-option" value="Filter Movie">Filter Movie</option>
+                                <option class="js-hero-option" value="2000-2018">2000-2018</option>
+                                <option class="js-hero-option" value="2018-2000">2018-2000</option>
+                                <option class="js-hero-option" value="A-Z">A-Z</option>
+                                <option class="js-hero-option" value="Z-A">Z-A</option>
+                                <option class="js-hero-option" value="1-10">1-10</option>
+                                <option class="js-hero-option" value="10-1">10-1</option>
+                            </select>
+                        </div>
+
                     </div>
+                    <button class="btn btn-outline-success rounded-start" type="submit">Search</button>
                 </form>
                 
                 
