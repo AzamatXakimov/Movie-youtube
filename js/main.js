@@ -158,7 +158,7 @@ elMovieForm.addEventListener("submit", function(evt){
     const regexGanres = new RegExp(elGanresValue, "gi");
     if(elInputValue == ""){
         const elSearch = movies.filter(item => (item.Categories.match(regexGanres) || elGanresValue === "All") && ((elMinYearValue <= item.movie_year && elMaxYearValue >= item.movie_year) || (elMinYearValue == "" && elMaxYearValue >= item.movie_year) || (elMinYearValue <= item.movie_year && elMaxYearValue == "")));
-        crateList(elSearch.slice(0, 12))
+        crateList(elSearch)
     }
     else{
     
@@ -180,5 +180,5 @@ elMovieForm.addEventListener("submit", function(evt){
     }
 })
 
-crateList(movies.slice(0, 12))
 addGanres(movies)
+crateList(movies.slice(0, 12))
