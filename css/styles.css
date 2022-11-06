@@ -1,3 +1,7 @@
+.js-mov-title{
+    text-transform: capitalize;
+}
+
 .rating-icon::before{
     display: inline-block;
     width: 20px;
@@ -30,3 +34,15 @@
     background-size: cover;
     content: "";
 }
+
+.favorites-btn{
+    position: fixed;
+    top: 50px;
+    right: calc(50% - 740px);
+    width: 60px;
+    height: 60px;
+    background-image: url("../images/bookmark.svg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 24px 24px;
+}   

@@ -6,8 +6,9 @@ const elMovieMinYear = elMovieForm.querySelector(".js-hero-min-year");
 const elMovieMaxYear = elMovieForm.querySelector(".js-hero-max-year");
 
 const elMovieSort = elMovieForm.querySelector(".js-hero-sort");
-// Movies List 
+// Movies Lists
 const elMovieList = document.querySelector(".js-mov-list");
+const elFavoriteMovieList = document.querySelector(".js-favorites-list");
 
 // MODAL
 const elModal = document.querySelector(".modal");
@@ -20,6 +21,11 @@ const modalCategories = elModal.querySelector(".modal-categories");
 const modalSummary = elModal.querySelector(".modal-summary");
 const modalLink = elModal.querySelector(".modal-imdb-link");
 
+
+const localFavoritesFilms = JSON.parse(window.localStorage.getItem("FavoritesFilms"))
+const FavoritesFilms = localFavoritesFilms || [];
+
+
 function getTime(time){
     const hours = Math.floor(time / 60);
     const minuts = Math.floor(time % 60);
@@ -27,7 +33,7 @@ function getTime(time){
     return `${hours}hrs ${minuts}min`
 }
 
-function crateList(movies){
+function crateList(movies, regex=""){
 
     elMovieList.innerHTML = null;
 
@@ -38,17 +44,59 @@ function crateList(movies){
         const elCloneMovie = elMovieTemp.cloneNode(true);
 
         elCloneMovie.querySelector(".js-mov-img").src = `https://i3.ytimg.com/vi/${item.ytid}/mqdefault.jpg`;
+
+        if(regex.source != "(?:)" && regex){
+            elCloneMovie.querySelector(".js-mov-title").innerHTML = item.Title.replace(regex, 
+                `<span class="bg-warning" >${regex.source.toLowerCase()}</span>`
+            )
+        }
+        else{
+            elCloneMovie.querySelector(".js-mov-title").textContent =  item.Title;
+        }
+        
+        elCloneMovie.querySelector(".js-mov-rating").textContent =  item.imdb_rating;
+        elCloneMovie.querySelector(".js-mov-year").textContent =  item.movie_year;
+        elCloneMovie.querySelector(".js-mov-runtime").textContent =  getTime(item.runtime);
+        elCloneMovie.querySelector(".js-mov-categories").textContent =  item.Categories.split("|").join(", ");
+        elCloneMovie.querySelector(".js-mov-btn").dataset.id = item.imdb_id;
+        elCloneMovie.querySelector(".js-add-to-favorites").textContent= "Add in Favorites";
+        elCloneMovie.querySelector(".js-add-to-favorites").classList.add("add-to-favorites","bg-info");
+        elCloneMovie.querySelector(".js-add-to-favorites").classList.remove("delete-to-favorites", "bg-danger");
+        elCloneMovie.querySelector(".js-add-to-favorites").dataset.id = item.imdb_id;
+
+        elMovieFragment.appendChild(elCloneMovie)
+    });
+
+    elMovieList.appendChild(elMovieFragment)
+};
+
+function createFavoriteList(movies){
+
+    elFavoriteMovieList.innerHTML = null;
+
+    const elMovieTemp = document.querySelector(".js-mov-temp").content;
+    const elMovieFragment = new DocumentFragment();
+
+    movies.forEach(item => {
+        const elCloneMovie = elMovieTemp.cloneNode(true);
+
+        elCloneMovie.querySelector(".js-mov-item").classList.remove("col-3")
+        elCloneMovie.querySelector(".js-mov-img").src = `https://i3.ytimg.com/vi/${item.ytid}/mqdefault.jpg`;
         elCloneMovie.querySelector(".js-mov-title").textContent =  item.Title;
         elCloneMovie.querySelector(".js-mov-rating").textContent =  item.imdb_rating;
         elCloneMovie.querySelector(".js-mov-year").textContent =  item.movie_year;
         elCloneMovie.querySelector(".js-mov-runtime").textContent =  getTime(item.runtime);
         elCloneMovie.querySelector(".js-mov-categories").textContent =  item.Categories.split("|").join(", ");
         elCloneMovie.querySelector(".js-mov-btn").dataset.id = item.imdb_id;
+        elCloneMovie.querySelector(".js-add-to-favorites").textContent= "Delete";
+        elCloneMovie.querySelector(".js-add-to-favorites").classList.remove("delete-to-favorites", "bg-info");
+        elCloneMovie.querySelector(".js-add-to-favorites").classList.add("add-to-favorites", "bg-danger");
+        elCloneMovie.querySelector(".js-add-to-favorites").dataset.id = item.imdb_id;
 
         elMovieFragment.appendChild(elCloneMovie)
     });
 
-    elMovieList.appendChild(elMovieFragment)
+    elFavoriteMovieList.appendChild(elMovieFragment)
 };
 
 function addGanres(Ganres){
@@ -107,30 +155,10 @@ function sortMovie(Arr, sortValue){
     }
 
     if(sortValue == "A-Z"){
-        Arr.sort((a, b)=> {
-            if(a.Title > b.Title){
-                return 1
-            }
-            else if(a.Title < b.Title){
-                return -1
-            }
-            else{
-                return 0
-            }
-        })
+        Arr.sort((a, b)=> String(a.Title).toLowerCase().charCodeAt(0) - String(b.Title).toLowerCase().charCodeAt(0))
     }
     else if(sortValue == "Z-A"){
-        Arr.sort((a, b)=>{
-            if(String(a.Title) > String(b.Title)){
-                return -1
-            }
-            else if(String(a.Title) < String(b.Title)){
-                return 1
-            }
-            else{
-                return 0
-            }
-        })
+        Arr.sort((a, b)=> String(b.Title).toLowerCase().charCodeAt(0) - String(a.Title).toLowerCase().charCodeAt(0))
     }
 
 
@@ -152,33 +180,39 @@ elMovieForm.addEventListener("submit", function(evt){
 
     const elMovieSortValue = elMovieSort.value;
 
-    sortMovie(movies, elMovieSortValue)
-
     const regexText = new RegExp(elInputValue, "gi");
     const regexGanres = new RegExp(elGanresValue, "gi");
-    if(elInputValue == ""){
-        const elSearch = movies.filter(item => (item.Categories.match(regexGanres) || elGanresValue === "All") && ((elMinYearValue <= item.movie_year && elMaxYearValue >= item.movie_year) || (elMinYearValue == "" && elMaxYearValue >= item.movie_year) || (elMinYearValue <= item.movie_year && elMaxYearValue == "")));
-        crateList(elSearch)
+    const elSearch = movies.filter(item => String(item.Title).match(regexText) && (item.Categories.match(regexGanres) || elGanresValue === "All") && ((elMinYearValue <= item.movie_year && elMaxYearValue >= item.movie_year) || (elMinYearValue == "" && elMaxYearValue >= item.movie_year) || (elMinYearValue <= item.movie_year && elMaxYearValue == "")));
+    
+    if(elSearch.length > 0){
+        sortMovie(elSearch, elMovieSortValue)
+        crateList(elSearch, regexText);
     }
     else{
-    
-        const elSearch = movies.filter(item => String(item.Title).match(regexText) && (item.Categories.match(regexGanres) || elGanresValue === "All") && ((elMinYearValue <= item.movie_year && elMaxYearValue >= item.movie_year) || (elMinYearValue == "" && elMaxYearValue >= item.movie_year) || (elMinYearValue <= item.movie_year && elMaxYearValue == "")));
-    
-        if(elSearch.length > 0){
-            crateList(elSearch);
-        }
-        else{
-            elMovieList.innerHTML = ""
-            const item = document.createElement("li");
-            const text = document.createElement("h3");
-            text.classList.add("text-white");
-            text.textContent = "Not Found"
-    
-            item.appendChild(text);
-            elMovieList.appendChild(item)
+        elMovieList.innerHTML = ""
+        const item = document.createElement("li");
+        const text = document.createElement("h3");
+        text.classList.add("text-white");
+        text.textContent = "Not Found"
+        
+        item.appendChild(text);
+        elMovieList.appendChild(item)
+    }
+})
+
+elMovieList.addEventListener("click", function(evt){
+    if(evt.target.matches(".add-to-favorites")){
+        const obj = movies.find(item => item.imdb_id == evt.target.dataset.id)
+        if(!FavoritesFilms.includes(obj)){
+            console.log(FavoritesFilms);
+            console.log(FavoritesFilms.includes(obj));
+            FavoritesFilms.push(obj);
+            createFavoriteList(FavoritesFilms);
+            window.localStorage.setItem("FavoritesFilms", JSON.stringify(FavoritesFilms))
         }
     }
 })
 
-addGanres(movies)
+addGanres(movies);
+createFavoriteList(FavoritesFilms)
 crateList(movies.slice(0, 12))

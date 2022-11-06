@@ -52,7 +52,7 @@
                     </div>
                     <button class="btn btn-outline-success rounded-start" type="submit">Search</button>
                 </form>
-                
+                <button class="favorites-btn d-inline-block border-0 rounded-3 bg-info" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"></button>
                 
                 <ul class="js-mov-list row  mt-5 list-unstyled">
 
@@ -92,8 +92,20 @@
                         <a class="modal-imdb-link" href="" target="blank">Show on IMDb</a>
                     </div>
                 </div>
-                
+                <span></span>
             </div>
+        </div>
+    </div>
+
+    <div class="offcanvas offcanvas-end bg-dark" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+        <div class="offcanvas-header pt-4">
+            <h5 class="offcanvas-title fs-3 text-white" id="offcanvasRightLabel">Favorites Films</h5>
+            <button type="button" class="btn-close favorites-close d-inline-block me-2" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <ul class="js-favorites-list mb-0 text-white list-unstyled">
+
+            </ul>
         </div>
     </div>
     
@@ -111,6 +123,7 @@
                     hjhsijnksjcn, jsdhjs
                 </div>
                 <button class="js-mov-btn btn btn-success" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal">More info</button>
+                <button class="js-add-to-favorites btn btn-info mt-2 text-white" type="button">Add in Favorites</button>
             </div>
         </li>
     </template>
