@@ -89,8 +89,8 @@ function createFavoriteList(movies){
         elCloneMovie.querySelector(".js-mov-categories").textContent =  item.Categories.split("|").join(", ");
         elCloneMovie.querySelector(".js-mov-btn").dataset.id = item.imdb_id;
         elCloneMovie.querySelector(".js-add-to-favorites").textContent= "Delete";
-        elCloneMovie.querySelector(".js-add-to-favorites").classList.remove("delete-to-favorites", "bg-info");
-        elCloneMovie.querySelector(".js-add-to-favorites").classList.add("add-to-favorites", "bg-danger");
+        elCloneMovie.querySelector(".js-add-to-favorites").classList.remove("add-to-favorites", "bg-info");
+        elCloneMovie.querySelector(".js-add-to-favorites").classList.add("delete-to-favorites", "bg-danger");
         elCloneMovie.querySelector(".js-add-to-favorites").dataset.id = item.imdb_id;
 
         elMovieFragment.appendChild(elCloneMovie)
@@ -204,12 +204,18 @@ elMovieList.addEventListener("click", function(evt){
     if(evt.target.matches(".add-to-favorites")){
         const obj = movies.find(item => item.imdb_id == evt.target.dataset.id)
         if(!FavoritesFilms.includes(obj)){
-            console.log(FavoritesFilms);
-            console.log(FavoritesFilms.includes(obj));
             FavoritesFilms.push(obj);
             createFavoriteList(FavoritesFilms);
             window.localStorage.setItem("FavoritesFilms", JSON.stringify(FavoritesFilms))
         }
+    }
+})
+elFavoriteMovieList.addEventListener("click", function(evt){
+    if(evt.target.matches(".delete-to-favorites")){
+        const objIndex = FavoritesFilms.findIndex(item => item.imdb_id == evt.target.dataset.id)
+        FavoritesFilms.splice(objIndex, 1);
+        createFavoriteList(FavoritesFilms);
+        window.localStorage.setItem("FavoritesFilms", JSON.stringify(FavoritesFilms))
     }
 })
 
